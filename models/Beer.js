@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize")
 const db = require("../config/db")
 const Bar = require("./Bar");
-const Order = require("./Order");
+const {Order} = require("./Order");
 
 //const BeerOrder = require("./BeerOrder");
 
