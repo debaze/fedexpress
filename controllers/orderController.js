@@ -35,8 +35,23 @@ const orderController = {
 	async update() {
 		//
 	},
-	async delete() {
-		//
+	async delete(request, response) {
+		const orderId = request.params.orderId;
+		const order = await Order.findByPk(orderId);
+
+		if (!order) {
+			return response
+				.status(404)
+				.json("No order found with the given ID.");
+		}
+
+		Order.destroy({
+			where: orderId,
+		});
+
+		return response
+			.status(200)
+			.json("The order has been deleted.");
 	},
 };
 
