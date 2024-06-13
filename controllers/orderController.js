@@ -2,10 +2,7 @@ const Bar = require("../models/Bar");
 const {Order} = require("../models/Order");
 
 const orderController = {
-	async readAll() {
-		//
-	},
-	async readOne(request, response) {
+	async read(request, response) {
 		const orderId = request.params.orderId;
 		const order = await Order.findByPk(orderId);
 
@@ -18,6 +15,9 @@ const orderController = {
 		return response
 			.status(200)
 			.json(order);
+	},
+	async readByBar(request, response) {
+		//
 	},
 	async create(request, response) {
 		if (!request.form.isValid) {
@@ -32,8 +32,30 @@ const orderController = {
 			.status(201)
 			.json(order);
 	},
-	async update() {
-		//
+	async update(request, response) {
+		if (!request.form.isValid) {
+			return response
+				.status(400)
+				.json("Invalid form.");
+		}
+
+		const orderId = request.params.orderId;
+
+		try {
+			const order = await Order.update(request.form, {
+				where: {
+					id: orderId,
+				},
+			});
+
+			return response
+				.status(200)
+				.json(order);
+		} catch {
+			return response
+				.status(404)
+				.json("No order found with the given ID.");
+		}
 	},
 	async delete(request, response) {
 		const orderId = request.params.orderId;
@@ -46,7 +68,9 @@ const orderController = {
 		}
 
 		Order.destroy({
-			where: orderId,
+			where: {
+				id: orderId,
+			},
 		});
 
 		return response
