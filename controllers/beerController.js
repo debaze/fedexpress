@@ -6,7 +6,7 @@ const beerController = {
     //
   },
   async read(req, res) {
-    const id = req.params.id;
+    const id = req.params.beerId;
     const b = await Beer.findByPk(id);
     if (!b) {
       res.status(404).send({ message: "Beer not found" });
@@ -14,7 +14,6 @@ const beerController = {
     return res.status(200).send(b);
   },
   async create(req, res) {
-    //Code à adapter une fois le controller "barController" implémenté
     const barId = req.params.barId;
     const { name, degree, price, description } = req.body;
     const beer = { name, degree, price, description, barId };
@@ -23,19 +22,20 @@ const beerController = {
     return res.status(201).send({ beer: b, message: "Beer created" });
   },
   async update(req, res) {
-    const id = req.params.id;
+    const id = req.params.beerId;
     const { name, degree, price, description } = req.body;
     const beer = { name, degree, price, description };
 
     const queryResult = await Beer.update(beer, { where: { id } });
+    if (!queryResult) return res.status(404).send("Beer not found");
     return res
       .status(200)
       .send({ message: "Beer updated", result: queryResult });
   },
   async delete(req, res) {
-    const id = req.params.id;
+    const id = req.params.beerId;
     const queryResult = await Beer.destroy({ where: { id } });
-    if (queryResult === 0) return res.status(404).send("Beer not found");
+    if (!queryResult) return res.status(404).send("Beer not found");
     return res
       .status(200)
       .send({ message: "Beer deleted", result: queryResult });
