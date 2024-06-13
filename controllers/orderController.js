@@ -1,5 +1,5 @@
 const Bar = require("../models/Bar");
-const Order = require("../models/Order");
+const {Order} = require("../models/Order");
 
 const orderController = {
 	async readAll() {
