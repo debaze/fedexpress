@@ -9,7 +9,9 @@ const orderController = {
 		if (!order) {
 			return response
 				.status(404)
-				.json("No order found with the given ID.");
+				.json({
+					message: "No order found with the given ID.",
+				});
 		}
 
 		return response
@@ -23,59 +25,72 @@ const orderController = {
 		if (!request.form.isValid) {
 			return response
 				.status(400)
-				.json("Invalid form.");
+				.json({
+					message: "Invalid form.",
+				});
 		}
 
 		const order = await Order.create(request.form);
 
 		return response
 			.status(201)
-			.json(order);
+			.json({
+				order,
+				message: "The order has been created.",
+			});
 	},
 	async update(request, response) {
 		if (!request.form.isValid) {
 			return response
 				.status(400)
-				.json("Invalid form.");
+				.json({
+					message: "Invalid form.",
+				});
 		}
 
 		const orderId = request.params.orderId;
-
-		try {
-			const order = await Order.update(request.form, {
-				where: {
-					id: orderId,
-				},
-			});
-
-			return response
-				.status(200)
-				.json(order);
-		} catch {
-			return response
-				.status(404)
-				.json("No order found with the given ID.");
-		}
-	},
-	async delete(request, response) {
-		const orderId = request.params.orderId;
-		const order = await Order.findByPk(orderId);
-
-		if (!order) {
-			return response
-				.status(404)
-				.json("No order found with the given ID.");
-		}
-
-		Order.destroy({
+		const order = await Order.update(request.form, {
 			where: {
 				id: orderId,
 			},
 		});
 
+		if (!order) {
+			return response
+				.status(404)
+				.json({
+					message: "No order found with the given ID.",
+				});
+		}
+
 		return response
 			.status(200)
-			.json("The order has been deleted.");
+			.json({
+				order,
+				message: "The order has been updated.",
+			});
+	},
+	async delete(request, response) {
+		const orderId = request.params.orderId;
+		const order = Order.destroy({
+			where: {
+				id: orderId,
+			},
+		});
+
+		if (!order) {
+			return response
+				.status(404)
+				.json({
+					message: "No order found with the given ID.",
+				});
+		}
+
+		return response
+			.status(200)
+			.json({
+				message: "The order has been deleted.",
+			});
 	},
 };
 
