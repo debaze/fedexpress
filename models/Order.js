@@ -2,10 +2,16 @@ const DataTypes = require("sequelize")
 const db = require("../config/db")
 const Bar = require("./Bar")
 
+/**
+ * @enum {Number}
+ */
+const OrderStatus = {
+    PENDING: 0,
+    DONE: 1,
+};
 
 const Order = db.define('Order', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    // barId: { type: DataTypes.INTEGER, },
     name: {
         type: DataTypes.STRING(255),
         allowNull: false,
@@ -30,7 +36,7 @@ const Order = db.define('Order', {
 
     status: {
         type: DataTypes.BOOLEAN,
-        defaultValue: 0,
+        defaultValue: OrderStatus.PENDING,
         allowNull: false,
         validate: {
             notNull: true,
@@ -42,4 +48,7 @@ const Order = db.define('Order', {
 
 Order.belongsTo(Bar);
 
-module.exports = Order
+module.exports = {
+    Order,
+    OrderStatus,
+};
