@@ -45,9 +45,11 @@ const barController = {
 		const allDegrees = beers.reduce((sum, beer) => sum += beer.degree, 0);
 		const averageDegree = allDegrees / beers.length;
 
-		return response.status(200).json({
-			averageDegree,
-		});
+		return response
+			.status(200)
+			.json({
+				averageDegree,
+			});
 	},
 
 	async create(req, res) {
