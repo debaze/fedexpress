@@ -7,10 +7,10 @@ const barController = {
 		const barName = req.query.name
 		const barCity = req.query.city
 		if (barName) {
-			return await barController.readBarsByName(req, res, barName)
+			return await barController.readBarsByName(req, res)
 		}
 		if (barCity) {
-			return await barController.readBarsByCity(req, res, barCity)
+			return await barController.readBarsByCity(req, res)
 		}
 
 		try {
@@ -21,7 +21,8 @@ const barController = {
 		}
 	},
 
-	async readBarsByName(req, res, barName) {
+	async readBarsByName(req, res) {
+		const barName = req.query.name
 		try {
 			const result = await Bar.findOne({
 				where:
@@ -36,7 +37,8 @@ const barController = {
 		}
 	},
 
-	async readBarsByCity(req, res, barCity) {
+	async readBarsByCity(req, res) {
+		const barCity = req.query.city
 		const city = barCity.trim()
 		try {
 			const result = await Bar.findAll({
@@ -48,7 +50,6 @@ const barController = {
 			});
 			return res.status(200).send(result)
 		} catch (error) {
-
 			return res.status(500).send({ message: 'Error read city: ', error })
 		}
 	},
