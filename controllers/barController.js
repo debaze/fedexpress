@@ -1,4 +1,5 @@
 const Bar = require("../models/Bar");
+const Beer = require("../models/Beer");
 
 const barController = {
 	async readAll(req, res) {
@@ -21,6 +22,34 @@ const barController = {
 		} catch (error) {
 			return res.status(500).send({ message: 'Error read bar: ', error })
 		}
+	},
+
+	async readAverageDegree(request, response) {
+		const barId = request.params.barId;
+		const bar = await Bar.findByPk(barId);
+
+		if (!bar) {
+			return response
+				.status(404)
+				.json({
+					message: "No bar found with the given ID.",
+				});
+		}
+
+		const beers = await Beer.findAll({
+			where: {
+				barId,
+			},
+		});
+
+		const allDegrees = beers.reduce((sum, beer) => sum += beer.degree, 0);
+		const averageDegree = allDegrees / beers.length;
+
+		return response
+			.status(200)
+			.json({
+				averageDegree,
+			});
 	},
 
 	async create(req, res) {

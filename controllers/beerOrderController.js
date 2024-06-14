@@ -15,9 +15,6 @@ const beerOrderController = {
 	async readOrdersBetweenPrice() {
 		//
 	},
-	async readAverageBeerDegree() {
-		//
-	},
 	async create() {
 		//
 	},
