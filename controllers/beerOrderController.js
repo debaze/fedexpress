@@ -55,7 +55,7 @@ const beerOrderController = {
 		});
 
 		return response
-			.status(200)
+			.status(418)
 			.json({
 				message: "Beer added to order.",
 				beerOrder,
