@@ -49,7 +49,7 @@ const orderController = {
 				});
 		}
 
-		const barId = request.form.BarId;
+		const barId = request.params.barId;
 		const bar = await Bar.findByPk(barId);
 
 		if (!bar) {
@@ -61,6 +61,7 @@ const orderController = {
 		}
 
 		request.form.status = OrderStatus.PENDING;
+		request.form.BarId = barId;
 
 		const order = await Order.create(request.form);
 
@@ -92,20 +93,21 @@ const orderController = {
 		}
 
 		const orderId = request.params.orderId;
-		await Order.update(request.form, {
+		const isUpdated = await Order.update(request.form, {
 			where: {
 				id: orderId,
 			},
 		});
-		const order = await Order.findByPk(orderId);
 
-		if (!order) {
+		if (!isUpdated) {
 			return response
 				.status(404)
 				.json({
 					message: "No order found with the given ID.",
 				});
 		}
+
+		const order = await Order.findByPk(orderId);
 
 		return response
 			.status(200)
