@@ -1,6 +1,6 @@
-const DataTypes = require("sequelize")
-const db = require("../config/db")
-const Bar = require("./Bar")
+const DataTypes = require("sequelize");
+const db = require("../config/db");
+const Bar = require("./Bar");
 
 /**
  * @enum {Number}
