@@ -1,5 +1,5 @@
 const Bar = require("../models/Bar");
-const {Order} = require("../models/Order");
+const {Order, OrderStatus} = require("../models/Order");
 
 const orderController = {
 	async read(request, response) {
@@ -59,6 +59,8 @@ const orderController = {
 					message: "Invalid form: No bar found with the given ID.",
 				});
 		}
+
+		request.form.status = OrderStatus.PENDING;
 
 		const order = await Order.create(request.form);
 
