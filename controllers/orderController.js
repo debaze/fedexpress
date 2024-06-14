@@ -67,14 +67,23 @@ const orderController = {
 				});
 		}
 
-		const orderId = request.params.orderId;
+		const barId = request.form.BarId;
+		const bar = await Bar.findByPk(barId);
 
+		if (!bar) {
+			return response
+				.status(400)
+				.json({
+					message: "Invalid form: No bar found with the given ID.",
+				});
+		}
+
+		const orderId = request.params.orderId;
 		await Order.update(request.form, {
 			where: {
 				id: orderId,
 			},
 		});
-
 		const order = await Order.findByPk(orderId);
 
 		if (!order) {
