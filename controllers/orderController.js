@@ -1,7 +1,6 @@
+const {Op} = require("sequelize");
 const Bar = require("../models/Bar");
-const { Order, OrderStatus } = require("../models/Order");
-
-const { Op } = require("sequelize");
+const {Order, OrderStatus} = require("../models/Order");
 
 const orderController = {
   async read(request, response) {
@@ -29,6 +28,7 @@ const orderController = {
     if ("date" in request.query) {
       return await orderController.readOrdersByDate(request, response);
     }
+
     if ("min_price" in request.query || "max_price" in request.query) {
       return await orderController.readOrdersBetweenPrice(request, response);
     }
@@ -44,8 +44,8 @@ const orderController = {
   async readOrdersByDate(req, res) {
     const requestDate = req.query.date;
     const barId = req.params.barId;
-
     const bar = await Bar.findByPk(barId);
+
     if (!bar) {
       return res.status(400).send({ message: "Invalid barId" });
     }
@@ -60,14 +60,15 @@ const orderController = {
     const orders = await Order.findAll({
       where: { BarId: barId, date: requestDate },
     });
+
     return res.status(200).send(orders);
   },
   async readOrdersBetweenPrice(req, res) {
     const minPrice = req.query.min_price;
     const maxPrice = req.query.max_price;
     const barId = req.params.barId;
-
     const bar = await Bar.findByPk(barId);
+
     if (!bar) {
       return res.status(400).send({ message: "Invalid barId" });
     }
@@ -77,6 +78,7 @@ const orderController = {
         .status(400)
         .send({ message: "One or several invalid parameters" });
     }
+
     if (minPrice > maxPrice) {
       return res
         .status(400)
@@ -91,6 +93,7 @@ const orderController = {
         },
       },
     });
+
     return res.status(200).send(orders);
   },
   async create(request, response) {

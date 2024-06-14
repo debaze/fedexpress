@@ -11,40 +11,39 @@ const OrderStatus = {
 };
 
 const Order = db.define('Order', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
     name: {
         type: DataTypes.STRING(255),
         allowNull: false,
         validate: {
             notNull: true,
             notEmpty: true,
-        }
+        },
     },
-
     price: {
         type: DataTypes.DECIMAL(7, 2),
         allowNull: false,
         validate: {
-            min: 0
+            min: 0,
         },
     },
-
     date: {
         type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
+        defaultValue: DataTypes.NOW,
     },
-
     status: {
         type: DataTypes.BOOLEAN,
         defaultValue: OrderStatus.PENDING,
         allowNull: false,
         validate: {
             notNull: true,
-        }
+        },
     },
-
-
-})
+});
 
 Order.belongsTo(Bar);
 

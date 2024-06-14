@@ -1,4 +1,4 @@
-const { Op } = require("sequelize")
+const {Op} = require("sequelize");
 const Bar = require("../models/Bar");
 const Beer = require("../models/Beer");
 
@@ -7,37 +7,42 @@ const barController = {
 		if ("name" in req.query) {
 			return await barController.readBarsByName(req, res)
 		}
+
 		if ("city" in req.query) {
 			return await barController.readBarsByCity(req, res)
 		}
 
 		try {
 			const result = await Bar.findAll()
+
 			return res.status(200).send(result)
 		} catch (error) {
 			return res.status(500).send({ message: 'Error read bar: ', error })
 		}
 	},
-
 	async readBarsByName(req, res) {
 		const barName = req.query.name
+
 		try {
 			const result = await Bar.findOne({
-				where:
-					{ name: barName }
-			})
+				where: {
+					name: barName,
+				},
+			});
+
 			if (!result) {
 				return res.status(404).send({ message: 'bar not found:' })
 			}
+
 			return res.status(200).send(result)
 		} catch (error) {
 			return res.status(500).send({ message: 'Error read bar: ', error })
 		}
 	},
-
 	async readBarsByCity(req, res) {
 		const barCity = req.query.city
 		const city = barCity.trim()
+
 		try {
 			const result = await Bar.findAll({
 				where: {
@@ -46,25 +51,27 @@ const barController = {
 					}
 				},
 			});
+
 			return res.status(200).send(result)
 		} catch (error) {
 			return res.status(500).send({ message: 'Error read city: ', error })
 		}
 	},
-
 	async read(req, res) {
 		const id = req.params.barId
+
 		try {
 			const result = await Bar.findByPk(id)
+
 			if (!result) {
 				return res.status(404).send({ message: 'Bar missing' });
 			}
+
 			return res.status(200).send(result)
 		} catch (error) {
 			return res.status(500).send({ message: 'Error read bar: ', error })
 		}
 	},
-
 	async readAverageDegree(request, response) {
 		const barId = request.params.barId;
 		const bar = await Bar.findByPk(barId);
@@ -92,7 +99,6 @@ const barController = {
 				averageDegree,
 			});
 	},
-
 	async create(req, res) {
 		if (!req.form.isValid) {
 			return res
@@ -101,16 +107,18 @@ const barController = {
 					message: "Invalid form.",
 				});
 		}
+
 		const { name, address, tel, email, description } = req.body
 		const bar = { name, address, tel, email, description }
+
 		try {
 			const result = await Bar.create(bar)
+
 			return res.status(200).send(result)
 		} catch (error) {
 			return res.status(500).send({ message: 'Error create bar: ', error })
 		}
 	},
-
 	async update(req, res) {
 		if (!req.form.isValid) {
 			return res
@@ -119,30 +127,36 @@ const barController = {
 					message: "Invalid form.",
 				});
 		}
+
 		const id = req.params.barId
 		const { name, address, tel, email, description } = req.body
 		const bar = { name, address, tel, email, description }
+
 		try {
-			const result = await Bar.update(bar, { where: { id } })
+			const result = await Bar.update(bar, { where: { id } });
+
 			if (!result) {
 				return res.status(404).send({ message: 'Bar missing' });
 			}
+
 			const barAfterResult = await Bar.findByPk(id)
+
 			return res.status(200).send(barAfterResult)
 		} catch (error) {
 			return res.status(500).send({ message: 'Error update bar: ', error })
 		}
-
 	},
 	async delete(req, res) {
 		const id = req.params.barId
+
 		try {
 			const result = await Bar.destroy({ where: { id } })
+
 			if (!result) {
 				return res.status(404).send({ message: 'Bar missing' });
 			}
-			return res.status(200).send({ message: 'Bar delete with success' });
 
+			return res.status(200).send({ message: 'Bar delete with success' });
 		} catch (error) {
 			return res.status(500).send({ message: 'Error delete bar: ', error })
 		}
