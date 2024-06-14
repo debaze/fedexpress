@@ -49,12 +49,10 @@ const beerOrderController = {
 				});
 		}
 
-		const beerOrder = BeerOrder.build({
+		const beerOrder = await BeerOrder.create({
 			BeerId: beerId,
 			OrderId: orderId,
 		});
-
-		beerOrder.save();
 
 		return response
 			.status(200)
