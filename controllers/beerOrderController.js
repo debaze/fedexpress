@@ -3,12 +3,7 @@ const Beer = require("../models/Beer");
 const {Order} = require("../models/Order");
 
 const beerOrderController = {
-	async readBarsByName() {
-		//
-	},
-	async readBarsByCity() {
-		//
-	},
+
 	async readOrdersByDate() {
 		//
 	},
