@@ -1,9 +1,12 @@
-const { DataTypes } = require("sequelize")
-const db = require("../config/db")
-
+const {DataTypes} = require("sequelize");
+const db = require("../config/db");
 
 const Bar = db.define('Bar', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
     name: {
         type: DataTypes.STRING(255),
         unique: true,
@@ -11,9 +14,8 @@ const Bar = db.define('Bar', {
         validate: {
             notNull: true,
             notEmpty: true,
-        }
+        },
     },
-
     address: {
         type: DataTypes.STRING(255),
         allowNull: false,
@@ -22,12 +24,10 @@ const Bar = db.define('Bar', {
             notEmpty: true,
         },
     },
-
     tel: {
         type: DataTypes.STRING(10),
         allowNull: true,
     },
-
     email: {
         type: DataTypes.STRING(128),
         allowNull: false,
@@ -36,13 +36,10 @@ const Bar = db.define('Bar', {
             notEmpty: true,
         },
     },
-
     description: {
         type: DataTypes.TEXT,
         allowNull: true,
     },
-
 })
 
-
-module.exports = Bar
+module.exports = Bar;

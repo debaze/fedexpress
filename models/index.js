@@ -1,3 +1,3 @@
-const Bar = require("./Bar")
-const Beer = require("./Beer")
-const {Order} = require("./Order")
+require("./Bar");
+require("./Beer");
+require("./Order");
