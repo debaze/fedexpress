@@ -1,10 +1,8 @@
-const { DataTypes } = require("sequelize")
-const db = require("../config/db")
+const { DataTypes } = require("sequelize");
+const db = require("../config/db");
 const Bar = require("./Bar");
 const {Order} = require("./Order");
-
-//const BeerOrder = require("./BeerOrder");
-
+const BeerOrder = require("./BeerOrder");
 
 const Beer = db.define('Beer', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
@@ -43,7 +41,7 @@ const Beer = db.define('Beer', {
 
 Beer.belongsTo(Bar);
 Beer.belongsToMany(Order, {
-    through: "BeerOrder",
+    through: BeerOrder,
 });
 
 module.exports = Beer
