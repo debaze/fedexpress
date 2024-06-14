@@ -4,12 +4,10 @@ const Beer = require("../models/Beer");
 
 const barController = {
 	async readAll(req, res) {
-		const barName = req.query.name
-		const barCity = req.query.city
-		if (barName) {
+		if ("name" in req.query) {
 			return await barController.readBarsByName(req, res)
 		}
-		if (barCity) {
+		if ("city" in req.query) {
 			return await barController.readBarsByCity(req, res)
 		}
 
