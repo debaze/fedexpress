@@ -3,7 +3,14 @@ const Beer = require("../models/Beer");
 
 const beerController = {
   async readAll(req, res) {
-    const beers = await Beer.findAll();
+    const barId = req.params.barId;
+    const bar = await Bar.findByPk(barId);
+    if (!bar) {
+      return res.status(404).send({ message: "Bar not found" });
+    }
+
+    const beers = await Beer.findAll({ where: { barId } });
+
     return res.status(200).send(beers);
   },
   async read(req, res) {
@@ -50,7 +57,7 @@ const beerController = {
 
     const queryResult = await Beer.update(beer, { where: { id } });
     if (!queryResult) {
-      return res.status(404).send("Beer not found");
+      return res.status(404).send({ message: "Beer not found" });
     }
 
     const beerUpdated = await Beer.findByPk(id);
