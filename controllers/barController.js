@@ -54,10 +54,10 @@ const barController = {
 		const bar = { name, address, tel, email, description }
 		try {
 			const result = await Bar.update(bar, { where: { id } })
-			const barAfterResult = await Bar.findByPk(id)
 			if (!result) {
 				return res.status(404).send({ message: 'Bar missing' });
-			}
+				}
+			const barAfterResult = await Bar.findByPk(id)
 			return res.status(200).send(barAfterResult)
 		} catch (error) {
 			return res.status(500).send({ message: 'Error update bar: ', error })
