@@ -19,7 +19,26 @@ const orderController = {
 			.json(order);
 	},
 	async readByBar(request, response) {
-		//
+		const barId = request.params.barId;
+		const bar = await Bar.findByPk(barId);
+
+		if (!bar) {
+			return response
+				.status(404)
+				.json({
+					message: "No bar found with the given ID.",
+				});
+		}
+
+		const orders = await Order.findAll({
+			where: {
+				BarId: barId,
+			},
+		});
+
+		return response
+			.status(200)
+			.json(orders);
 	},
 	async create(request, response) {
 		if (!request.form.isValid) {
@@ -49,11 +68,14 @@ const orderController = {
 		}
 
 		const orderId = request.params.orderId;
-		const order = await Order.update(request.form, {
+
+		await Order.update(request.form, {
 			where: {
 				id: orderId,
 			},
 		});
+
+		const order = await Order.findByPk(orderId);
 
 		if (!order) {
 			return response
