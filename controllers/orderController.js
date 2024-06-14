@@ -1,5 +1,5 @@
 const Bar = require("../models/Bar");
-const {Order} = require("../models/Order");
+const {Order, OrderStatus} = require("../models/Order");
 
 const orderController = {
 	async read(request, response) {
@@ -19,7 +19,26 @@ const orderController = {
 			.json(order);
 	},
 	async readByBar(request, response) {
-		//
+		const barId = request.params.barId;
+		const bar = await Bar.findByPk(barId);
+
+		if (!bar) {
+			return response
+				.status(404)
+				.json({
+					message: "No bar found with the given ID.",
+				});
+		}
+
+		const orders = await Order.findAll({
+			where: {
+				BarId: barId,
+			},
+		});
+
+		return response
+			.status(200)
+			.json(orders);
 	},
 	async create(request, response) {
 		if (!request.form.isValid) {
@@ -29,6 +48,20 @@ const orderController = {
 					message: "Invalid form.",
 				});
 		}
+
+		const barId = request.params.barId;
+		const bar = await Bar.findByPk(barId);
+
+		if (!bar) {
+			return response
+				.status(400)
+				.json({
+					message: "Invalid form: No bar found with the given ID.",
+				});
+		}
+
+		request.form.status = OrderStatus.PENDING;
+		request.form.BarId = barId;
 
 		const order = await Order.create(request.form);
 
@@ -48,20 +81,33 @@ const orderController = {
 				});
 		}
 
+		const barId = request.form.BarId;
+		const bar = await Bar.findByPk(barId);
+
+		if (!bar) {
+			return response
+				.status(400)
+				.json({
+					message: "Invalid form: No bar found with the given ID.",
+				});
+		}
+
 		const orderId = request.params.orderId;
-		const order = await Order.update(request.form, {
+		const isUpdated = await Order.update(request.form, {
 			where: {
 				id: orderId,
 			},
 		});
 
-		if (!order) {
+		if (!isUpdated) {
 			return response
 				.status(404)
 				.json({
 					message: "No order found with the given ID.",
 				});
 		}
+
+		const order = await Order.findByPk(orderId);
 
 		return response
 			.status(200)
