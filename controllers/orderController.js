@@ -45,6 +45,11 @@ const orderController = {
     const requestDate = req.query.date;
     const barId = req.params.barId;
 
+    const bar = await Bar.findByPk(barId);
+    if (!bar) {
+      return res.status(400).send({ message: "Invalid barId" });
+    }
+
     const [day, month, year] = requestDate.split("-");
     const formattedDate = new Date(year, month - 1, day);
 
@@ -61,6 +66,11 @@ const orderController = {
     const minPrice = req.query.min_price;
     const maxPrice = req.query.max_price;
     const barId = req.params.barId;
+
+    const bar = await Bar.findByPk(barId);
+    if (!bar) {
+      return res.status(400).send({ message: "Invalid barId" });
+    }
 
     if (!minPrice || !maxPrice || minPrice < 0 || maxPrice < 0) {
       return res
