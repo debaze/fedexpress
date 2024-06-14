@@ -10,7 +10,7 @@ const updateOrderForm = expressForm(
 	filter("status").toInt(),
 	filter("BarId").toInt(),
 	validate("name").required().isString().maxLength(255),
-	validate("price").required().isFloat(),
+	validate("price").required().isNumeric(),
 	validate("date").isDate(),
 	validate("status").required().customValidator(orderStatusValidator),
 	validate("BarId").required().isNumeric(),

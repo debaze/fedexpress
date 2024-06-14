@@ -7,7 +7,7 @@ const createOrderForm = expressForm(
 	filter("price").toFloat(),
 	filter("date"),
 	validate("name").required().isString().maxLength(255),
-	validate("price").required().isFloat(),
+	validate("price").required().isNumeric(),
 	validate("date").isDate(),
 );
 
