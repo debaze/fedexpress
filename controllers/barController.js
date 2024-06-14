@@ -1,13 +1,54 @@
+const { Op } = require("sequelize")
 const Bar = require("../models/Bar");
 const Beer = require("../models/Beer");
 
 const barController = {
 	async readAll(req, res) {
+		if ("name" in req.query) {
+			return await barController.readBarsByName(req, res)
+		}
+		if ("city" in req.query) {
+			return await barController.readBarsByCity(req, res)
+		}
+
 		try {
 			const result = await Bar.findAll()
 			return res.status(200).send(result)
 		} catch (error) {
 			return res.status(500).send({ message: 'Error read bar: ', error })
+		}
+	},
+
+	async readBarsByName(req, res) {
+		const barName = req.query.name
+		try {
+			const result = await Bar.findOne({
+				where:
+					{ name: barName }
+			})
+			if (!result) {
+				return res.status(404).send({ message: 'bar not found:' })
+			}
+			return res.status(200).send(result)
+		} catch (error) {
+			return res.status(500).send({ message: 'Error read bar: ', error })
+		}
+	},
+
+	async readBarsByCity(req, res) {
+		const barCity = req.query.city
+		const city = barCity.trim()
+		try {
+			const result = await Bar.findAll({
+				where: {
+					address: {
+						[Op.substring]: city,
+					}
+				},
+			});
+			return res.status(200).send(result)
+		} catch (error) {
+			return res.status(500).send({ message: 'Error read city: ', error })
 		}
 	},
 
@@ -85,7 +126,7 @@ const barController = {
 			const result = await Bar.update(bar, { where: { id } })
 			if (!result) {
 				return res.status(404).send({ message: 'Bar missing' });
-				}
+			}
 			const barAfterResult = await Bar.findByPk(id)
 			return res.status(200).send(barAfterResult)
 		} catch (error) {
